@@ -73,6 +73,8 @@ window.onload = function(){
 	}
 	document.getElementById("cerrarMovil").onclick = function () {
 		document.getElementById("menuAjustes").style.display ="none";  
+		document.getElementById("play").style.display = "inline-block";
+		document.getElementById("pause").style.display = "none";
 	}
 	document.getElementById("info").onclick = function () {
 		salir=confirm("¿Seguro que desea salir?");
