@@ -275,12 +275,14 @@ function pausar(){
 		stop();
 		document.getElementById("play").style.display = "inline-block";
 		document.getElementById("pause").style.display = "none";
+		document.getElementById("contenedorMenu").style.display ="inline-block"; 
 		paused=true;
 	}
 }
 function play(){
 	document.getElementById("pause").style.display = "inline-block";
 	document.getElementById("play").style.display = "none";
+	document.getElementById("contenedorMenu").style.display ="none"; 
 	if(a==-g){
 		timerFuel=setInterval(function(){ actualizarFuel(); }, 10);	
 	}
