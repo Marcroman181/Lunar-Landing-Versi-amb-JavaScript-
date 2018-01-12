@@ -160,7 +160,7 @@ function stop(){
 	clearInterval(timerFuel);
 	timerFuel=null;
 	
-	if(y>70){
+	if(y>70&&!aterrizado){
 		//Finalizar la partida
 		aterrizado=true;
 		document.getElementById("aguja").style.transform = "rotate(-90deg)";
