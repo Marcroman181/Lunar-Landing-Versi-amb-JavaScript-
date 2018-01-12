@@ -10,8 +10,8 @@ var v = 0;
 var c = 100;
 var a = g; //la aceleración cambia cuando se enciende el motor de a=g a a=-g (simplificado)
 //booleanos
-var paused = false;
-var aterrizado = false;
+var paused = false;	
+var aterrizado = false;	
 var fuelAgotado = false;
 var salir=false;
 //condición de victoria
@@ -37,7 +37,6 @@ window.onload = function(){
 	}
 	//ocultar menú móvil
 	document.getElementById("reanudar").onclick = function () {
-		document.getElementById("contenedorMenu").style.display = "none";
 		play();
 	}
 	//encender/apagar el motor al hacer click en la pantalla
@@ -52,30 +51,38 @@ window.onload = function(){
 	document.getElementById("reiniciar").onclick = function () {
 		reiniciar();
 	}
+	//Pausar la partida
 	document.getElementById("pause").onclick = function () {
-		pausar();
+		if(!paused) pausar();
 	}
+	//Reanudar la partida
 	document.getElementById("play").onclick = function () {
 		play();
 	}
+	//Reiniciar la partida al terminarla
 	document.getElementById("tryagain").onclick = function () {
 		reiniciar();
 	}
+	//Abrir el menú de ajustes
 	document.getElementById("ajustes").onclick = function () {
 		stop();
+		paused=true;
 		document.getElementById("menuAjustes").style.display ="inline-block"; 
 		document.getElementById("contenedorMenu").style.display ="inline-block"; 
 	}
+	//Cerrar el menú de ajustes
 	document.getElementById("cerrar").onclick = function () {
 		document.getElementById("contenedorMenu").style.display ="none";
 		document.getElementById("menuAjustes").style.display ="none";  
 		play();
 	}
+	//Cerrar el menú de ajustes dejando abierto el menú para móvil
 	document.getElementById("cerrarMovil").onclick = function () {
 		document.getElementById("menuAjustes").style.display ="none";  
 		document.getElementById("play").style.display = "inline-block";
 		document.getElementById("pause").style.display = "none";
 	}
+	//Ir a la web de instrucciones
 	document.getElementById("info").onclick = function () {
 		salir=confirm("¿Seguro que desea salir?");
 		if(salir){
@@ -83,6 +90,7 @@ window.onload = function(){
 			salir=false;
 		}
 	}
+	//Ir a la web de istrucciones desde el móvil
 	document.getElementById("instrucciones").onclick = function () {
 		salir=confirm("¿Seguro que desea salir?");
 		if(salir){
@@ -90,6 +98,7 @@ window.onload = function(){
 			salir=false;
 		}
 	}
+	//Ir a la web de información
 	document.getElementById("acerca").onclick = function () {
 		salir=confirm("¿Seguro que desea salir?");
 		if(salir){
@@ -97,9 +106,11 @@ window.onload = function(){
 			salir=false;
 		}
 	}
+	//Abrir el menú de ajustes desde el móvil
 	document.getElementById("ajustesMovil").onclick = function () {
 		document.getElementById("menuAjustes").style.display ="inline-block";  
 	}
+	//Cambiar a dificultad fácil
 	document.getElementsByClassName("dificultad1")[0].onclick = function () {
 	
 		velocidadVictoria=5;
@@ -109,6 +120,7 @@ window.onload = function(){
 		document.getElementsByClassName("dificultad3")[0].style.backgroundColor ="#e7e7e7";
 		quitarDificultad();
 	}
+	//Cambiar a dificultad normal
 	document.getElementsByClassName("dificultad2")[0].onclick = function () {
 
 		document.getElementsByClassName("dificultad1")[0].style.backgroundColor ="#e7e7e7";
@@ -118,6 +130,7 @@ window.onload = function(){
 		cdificultad=80;
 		quitarDificultad();
 	}
+	//Cambiar a dificultad difícil
 	document.getElementsByClassName("dificultad3")[0].onclick = function () {
 
 		document.getElementsByClassName("dificultad1")[0].style.backgroundColor ="#e7e7e7";
@@ -133,6 +146,7 @@ window.onload = function(){
 }
 
 //Definición de funciones
+
 function start(){
 	//cada intervalo de tiempo mueve la nave
 	if(!paused){
@@ -141,15 +155,19 @@ function start(){
 }
 
 function stop(){
-
+	//Parar la nave y su consumo
 	clearInterval(timer);
+	clearInterval(timerFuel);
+	timerFuel=null;
+	
 	if(y>70){
+		//Finalizar la partida
 		aterrizado=true;
 		document.getElementById("aguja").style.transform = "rotate(-90deg)";
 		altura=80;
 		document.getElementById("altura").style.top = altura+"%"; 
-		clearInterval(timerFuel);
-		timerFuel=null;
+		
+		//Comprobar victoria
 		if(v<velocidadVictoria){
 			document.getElementById("final").style.display ="inline-block"; 
 			document.getElementById("textFinal").innerHTML = "¡Has ganado! ¡Felicidades!";
@@ -157,11 +175,6 @@ function stop(){
 			document.getElementById("imgNave").src="img/explosion.gif";
 			document.getElementById("final").style.display ="inline-block"; 
 			document.getElementById("textFinal").innerHTML = "¡Has perdido! <br> Vuelve a intentarlo";
-		}
-	}else{
-		if(a==-g){
-			clearInterval(timerFuel);
-			timerFuel=null;
 		}
 	}
 }
@@ -188,6 +201,7 @@ function moverNave(){
 			stop();
 		}
 	}else{
+		//Reducir la velocidad a 0 y parar el motor si la nave ha llegado al límite superior
 		y=0;
 		v=0;
 		if(a==-g){
@@ -235,20 +249,19 @@ function actualizarFuel(){
 	c-=0.1;
 	if (c < 0 ){
 		c = 0;
+		//Apagar el motor al agotar el combustible
 		fuelAgotado=true;
 		if(a==-g){
 			motorOff();
 		}
 	}
+	//Actualizar marcador
 	combustibleGastado=100-c;
 	document.getElementById("barra").style.height = combustibleGastado+"%";
 }
 function reiniciar(){
-	if(!aterrizado){
-		stop();
-	}else{
-		document.getElementById("final").style.display = "none";		
-	}
+	//Inicializar todas las variables y elementos para reiniciar la partida 
+	
 	y = 10; // altura inicial y0=10%, debe leerse al iniciar si queremos que tenga alturas diferentes dependiendo del dispositivo
 	v = 0;
 	c = cdificultad;
@@ -261,6 +274,7 @@ function reiniciar(){
 	g = 1.622;
 	clearInterval(timerFuel);
 	timerFuel=null;
+	clearInterval(timer);
 	document.getElementById("barra").style.height = 100-cdificultad+"%";
 	document.getElementById("aguja").style.transform = "rotate(-90deg)";
 	altura=y+10;
@@ -268,12 +282,15 @@ function reiniciar(){
 	document.getElementById("pause").style.display = "inline-block";
 	document.getElementById("play").style.display = "none";	
 	document.getElementById("imgNave").src="img/nave.png";
+	document.getElementById("final").style.display = "none";	
 	document.getElementById("contenedorMenu").style.display ="none";
 	document.getElementById("menuAjustes").style.display ="none";  
 	start();
 }
 function pausar(){
+	
 	if(!aterrizado){
+		//Pausar partida
 		stop();
 		document.getElementById("play").style.display = "inline-block";
 		document.getElementById("pause").style.display = "none";
@@ -282,9 +299,11 @@ function pausar(){
 	}
 }
 function play(){
+	//Reanudar partida
 	document.getElementById("pause").style.display = "inline-block";
 	document.getElementById("play").style.display = "none";
-	document.getElementById("contenedorMenu").style.display ="none"; 
+	document.getElementById("contenedorMenu").style.display ="none";
+	document.getElementById("menuAjustes").style.display ="none"; 	
 	if(a==-g){
 		timerFuel=setInterval(function(){ actualizarFuel(); }, 10);	
 	}
@@ -292,6 +311,7 @@ function play(){
 	start();
 }
 function quitarDificultad(){
+		//Esconder menus y reiniciar partida con la nueva dificultad
 		document.getElementById("contenedorMenu").style.display ="none";
 		document.getElementById("menuAjustes").style.display ="none"; 
 		reiniciar();
