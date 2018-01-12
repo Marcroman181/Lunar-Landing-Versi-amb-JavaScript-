@@ -1,4 +1,4 @@
-# Luna-lander
+# Lunar landing
 ## Práctica html y css del luna lander
 
 **Autor: Marc Antoni Román Martínez**
